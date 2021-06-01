@@ -1,0 +1,37 @@
+subprojects {
+
+    // >> quickfix todo uncomment
+    ext.assemble = { String artifactId ->
+        String artifactGroup = artifactId.split(":")[0]
+        String artifactName = artifactId.split(":")[1]
+        String packageId = artifactId.replace(":", ".").replace("-", ".")
+
+        project.artifact("${artifactGroup}:${project.name}")
+        project.assemble(project(":${artifactId}"))
+        project.onLaunch("${packageId}.main()")
+    }
+    ext.graalvm = { String assembleId ->
+        String artifactId = assembleId.replace("-desktop", "")
+        project.assemble(artifactId)
+    }
+    // <<
+
+    ext.testCall = { String main ->
+        String testPath = project.path
+        String mainPath = testPath.replace("-test", "")
+        String artifactId = testPath.replace("-test", "-desktop")
+        
+        artifact artifactId
+        assemble project(mainPath)
+        mainCall main
+
+        project.kotlin {
+            sourceSets.main {
+                resources.srcDirs = ["test/res"]
+                kotlin.srcDirs = ["test", bootstrapDir]
+                kotlin.exclude("test/res")                
+            }
+        }
+    }
+
+}

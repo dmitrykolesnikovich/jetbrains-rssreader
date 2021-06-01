@@ -1,0 +1,427 @@
+subprojects {
+
+    ext.android_launcher = {
+        project.with {
+            apply plugin: "com.android.application"
+            apply plugin: "kotlin-android"
+            apply plugin: "kotlin-android-extensions"
+            apply plugin: "kotlin-kapt"
+
+            dependencies {
+                api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+                api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines_version"
+                api "com.android.support:multidex:1.0.3"
+            }
+
+            android {
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_1_8
+                    targetCompatibility = JavaVersion.VERSION_1_8
+                }
+                kotlinOptions {
+                    jvmTarget = JavaVersion.VERSION_1_8
+                }
+                compileSdkVersion 28
+                buildToolsVersion "29.0.3"
+                defaultConfig {
+                    applicationId project.packageId.replace(".android", "")
+                    minSdkVersion 19
+                    targetSdkVersion 28
+                    versionCode 1
+                    versionName "1.0"
+                    multiDexEnabled true
+                }
+                buildTypes {
+                    release {
+                        minifyEnabled true
+                        proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+                    }
+                }
+                packagingOptions {
+                    exclude "META-INF/*"
+                }
+                lintOptions {
+                    tasks.lint.enabled = false
+                }
+                dataBinding {
+                    enabled = true
+                }
+                sourceSets.main {
+                    manifest.srcFile "${projectDir}/AndroidManifest.xml"
+                    res.srcDirs = ["res"]
+                    java.srcDirs = ["src/android", bootstrapDir]
+                }
+            }
+
+            ext.assemble = { Project mainProject ->
+                dependencies {
+                    api mainProject
+                }
+            }
+
+            ext.onLaunch = { String mainCall ->
+                generate {
+                    BootstrapKtFile().text = """\
+                        |package ${project.packageId}
+                        |
+                        |import android.os.Bundle
+                        |import featurea.MainActivityProxy
+                        |import featurea.android.FeatureaActivity
+                        |import featurea.runtime.launch
+                        |import featurea.runtime.provideProxy
+                        |
+                        |class FeatureaMainActivity : FeatureaActivity() {
+                        |
+                        |    private val mainActivity: FeatureaActivity = this
+                        |
+                        |    override fun onCreate(savedInstanceState: Bundle?) {
+                        |        super.onCreate(savedInstanceState)
+                        |        launch(this) {
+                        |            initContainer {
+                        |                provideProxy(MainActivityProxy(mainActivity))
+                        |            }
+                        |            initModule { module ->
+                        |                mainActivity.module = module
+                        |            }
+                        |            $mainCall
+                        |        }
+                        |    }
+                        |
+                        |}
+                        |""".stripMargin("|")
+                }
+            }
+        }
+    }
+
+    ext.desktop_launcher = {
+        project.ext.desktopLauncherMainClassName = "${project.packageId}.Bootstrap"
+
+        project.with {
+            apply plugin: "application"
+            apply plugin: "kotlin"
+
+            dependencies {
+                api "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+                api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+                api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version"
+                api "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinx_coroutines_version"
+                api "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$kotlinx_coroutines_version"
+                api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+            }
+
+            sourceSets.main {
+                resources.srcDirs = ["res"]
+                java.srcDirs += ["src/desktop", bootstrapDir] // IMPORTANT `+=` instead of `=`
+            }
+
+            application {
+                mainClassName = project.desktopLauncherMainClassName
+                applicationName = project.name.replaceFirst("-utils", "") // quickfix todo find better place
+            }
+
+            run {
+                standardInput = System.in
+            }
+
+            ext.onLaunch = { main ->
+                mainCall "featurea.runtime.launch { $main }"
+            }
+
+            ext.mainCall = { String main ->
+                boolean isCall = main.contains("(")
+
+                // 1. function call
+                if (isCall) {
+                    generate {
+                        BootstrapKtFile().text = """\
+                            |@file:JvmName("Bootstrap")
+                            |
+                            |package ${project.packageId}
+                            |
+                            |import kotlinx.coroutines.runBlocking
+                            |
+                            |object Bootstrap {
+                            |
+                            |   @JvmStatic
+                            |   fun main(args: Array<String>) {
+                            |       runBlocking {
+                            |           $main
+                            |       }
+                            |   }
+                            |
+                            |}
+                            |""".stripMargin("|")
+                    }
+                }
+
+                // 2. canonical class name
+                else {
+                    project.ext.desktopLauncherMainClassName = main // quickfix todo improve
+
+                    application {
+                        mainClassName = main
+                    }
+                }
+            }
+
+            ext.assemble = { Project mainProject ->
+                dependencies {
+                    api mainProject
+                }
+            }
+        }
+    }
+
+    ext.ios_launcher = {
+        project.with {
+            apply plugin: "org.jetbrains.kotlin.multiplatform"
+
+            kotlin.sourceSets {
+                iosMain {
+                    kotlin.srcDirs = ["src/ios", bootstrapDir]
+                }
+            }
+
+            ext.assemble = { Project mainProject ->
+                project.ext.frameworkBaseName = mainProject.name.replace("-", "_")
+                kotlin {
+                    if (project != mainProject) {
+                        sourceSets {
+                            commonMain.dependencies {
+                                api mainProject
+                            }
+                        }
+                    }
+                    if (useIosExternals) {
+                        targets {
+                            fromPreset(presets.iosArm64, "ios") {
+                                binaries {
+                                    framework {
+                                        baseName = frameworkBaseName
+                                        if (project != mainProject) {
+                                            export mainProject
+                                            transitiveExport = true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        tasks["linkReleaseFrameworkIos"].onlyIf { false }
+                        // adhoc disabling linkage of release version todo improve
+                    }
+                }
+            }
+
+            ext.onLaunch = { String mainCall ->
+                generate {
+                    BootstrapKtFile().text = """\
+                        |/*
+                        |import UIKit
+                        |import $frameworkBaseName
+                        |UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv, nil, BootstrapKt.delegateClassName)
+                        |*/
+                        |
+                        |import featurea.ios.MainApplicationDelegateProxy
+                        |import featurea.ios.FeatureaApplicationService
+                        |import featurea.ios.MainWindowProxy
+                        |import featurea.runtime.launch
+                        |import featurea.log
+                        |import featurea.runtime.provideProxy
+                        |import platform.Foundation.NSStringFromClass
+                        |import platform.UIKit.*
+                        |
+                        |val delegateClassName = NSStringFromClass(FeatureaApplicationDelegate)
+                        |
+                        |private class FeatureaApplicationDelegate : UIResponder, UIApplicationDelegateProtocol {
+                        |
+                        |    companion object : UIResponderMeta(), UIApplicationDelegateProtocolMeta
+                        |
+                        |    @OverrideInit
+                        |    constructor() : super()
+                        |
+                        |    private val mainWindow: UIWindow = UIWindow(UIScreen.mainScreen.bounds)
+                        |    private val service = FeatureaApplicationService()
+                        |
+                        |    override fun window(): UIWindow { log("FeatureaApplicationDelegate.window: \$mainWindow"); return mainWindow }
+                        |                         
+                        |    override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
+                        |        val applicationDelegateProxy = MainApplicationDelegateProxy(this, service)
+                        |        launch(applicationDelegateProxy) {
+                        |            initContainer {
+                        |                provideProxy(applicationDelegateProxy)
+                        |                provideProxy(MainWindowProxy(mainWindow))
+                        |            }
+                        |            lcontrol.smartClient.ios.main()
+                        |        }
+                        |        return true
+                        |    }
+                        |                        
+                        |    override fun application(application: UIApplication, supportedInterfaceOrientationsForWindow: UIWindow?): UIInterfaceOrientationMask {
+                        |        return service.interfaceOrientationMask
+                        |    }
+                        |
+                        |}
+                        |""".stripMargin("|")
+                }
+            }
+        }
+    }
+
+    ext.js_launcher = {
+        project.ext.js_launcher_artifact = true
+        project.with {
+            apply plugin: "org.jetbrains.kotlin.js"
+
+            dependencies {
+                api "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+                api "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinx_coroutines_version"
+            }
+
+            // https://github.com/wiyarmir/kotlin-multiplatform-template/blob/e82a8db80952e860979fe5c7f6f49d49683db602/web/build.gradle
+            kotlin {
+                sourceSets.main {
+                    kotlin.srcDirs = ["src/js", bootstrapDir]
+                }
+                js {
+                    browser {
+                        webpackTask {
+                            outputFileName = "${project.name}.js"
+                            destinationDirectory = file("${buildDir}/bundle")
+                            sourceMaps = true
+                            // output.libraryTarget = "commonjs"
+                        }
+                    }
+                    binaries.executable()
+                }
+            }
+
+            compileKotlinJs {
+                kotlinOptions {
+                    sourceMap = true
+                    sourceMapEmbedSources = "always"
+                    outputFile = "$project.buildDir.path/js/${project.name}.js"
+                    suppressWarnings = true
+                    verbose = true
+                    metaInfo = true
+                    moduleKind = "commonjs"
+                    main = "call"
+                }
+            }
+
+            ext.assemble = { Project... externalProjects ->
+                Project mainProject = externalProjects.first()
+                dependencies {
+                    compile mainProject
+                }
+
+                generate { WebpackConfigDir() }
+
+                /*
+                tasks["bundle"].doLast {
+                    final boolean assembleDirExists = file("${projectDir}/assemble").exists()
+                    copy {
+                        from assembleDirExists ? "assemble" : "gen"
+                        into "$buildDir/bundle"
+                    }
+                    File jsSupportLibraries = file("${rootProject.projectDir}/support/js")
+                    if (jsSupportLibraries.exists()) {
+                        jsSupportLibraries.listFiles().each { File dir ->
+                            copy {
+                                from dir
+                                into "$buildDir/bundle/js"
+                                include "*.js"
+                            }
+                        }
+                    }
+                    for (externalProject in externalProjects) {
+                        copy {
+                            from "${externalProject.projectDir}/src/commonMain/resources"
+                            from "${externalProject.projectDir}src/main/resources"
+                            into "$buildDir/bundle"
+                            exclude "** /*.fab"
+                        }
+                    }
+                }
+                */
+            }
+
+            ext.onLaunch = { String main ->
+                if (main.endsWith("main()")) error("Rename $main to ${main.replace("main()", "launch()")}")
+
+                generate {
+                    BootstrapKtFile().text = """\
+                            |package ${project.packageId}
+                            |
+                            |import kotlinx.browser.window
+                            |import featurea.js.loadBody
+                            |import featurea.runtime.launch
+                            |import kotlinx.coroutines.launch
+                            |
+                            |fun main() { 
+                            |    window.loadBody {
+                            |        launch { $main } 
+                            |    } 
+                            |}
+                            |
+                            |""".stripMargin("|")
+                }
+
+                if (!file("${projectDir}/assemble").exists()) {
+                    IndexHtmlFile().text = """\
+                        |<html>
+                        |<head>
+                        |  <title>${project.name.replaceAll("-js", "").replaceAll("-", " ")}</title>
+                        |  <script src="${project.name}.bundle.js"></script>
+                        |</head>
+                        |<body style="margin: 0">
+                        |
+                        |</body>
+                        |</html>
+                        |""".stripMargin("|")
+                }
+            }
+
+            ext.onCreate = { String mainCall, Map<String, String> globalFunctions = null ->
+                generate {
+                    String globalFunctionDeclarations = ""
+                    String globalFunctionBodies = ""
+                    if (globalFunctions != null) {
+                        for (String globalFunctionName : globalFunctions.keySet()) {
+                            globalFunctionDeclarations += "\n    window.asDynamic()[\"${globalFunctionName}\"] = ::${globalFunctionName}"
+                        }
+                        for (String globalFunctionBody : globalFunctions.values()) {
+                            globalFunctionBodies += "$globalFunctionBody \n"
+                        }
+                    }
+
+                    BootstrapKtFile().text = """\
+                        |package ${project.packageId} $globalFunctionBodies
+                        |
+                        |fun main() {
+                        |    featurea.js.exportAll { args -> $mainCall } $globalFunctionDeclarations
+                        |}
+                        |""".stripMargin("|")
+                }
+            }
+
+            // >> just for try todo revert
+
+            task deleteBeforeBuild {
+                File deleteBeforeBuildTxt = new File(project.projectDir, "deleteBeforeBuild.txt")
+                if (deleteBeforeBuildTxt.exists()) {
+                    new File(project.buildDir, "bundle").deleteDir()
+                    for (String shortcut : deleteBeforeBuildTxt.readLines()) {
+                        new File(rootProject.projectDir, "build/js/node_modules/${shortcut}").delete()
+                        new File(rootProject.projectDir, "build/js/packages/${shortcut}").deleteDir()
+                    }
+                }
+            }
+
+            build.dependsOn(deleteBeforeBuild)
+
+            // <<
+        }
+    }
+
+}

@@ -1,0 +1,5 @@
+apply from: "gradle/featurea/plugin.gradle"
+
+artifact("jetbrains:rssreader") { "rssreader" }
+artifact("jetbrains:rssreader-android") { "rssreader-android" }
+artifact("jetbrains:rssreader-ios") { "rssreader-ios" }

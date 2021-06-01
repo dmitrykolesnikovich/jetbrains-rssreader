@@ -1,0 +1,117 @@
+subprojects {
+
+    ext.androidExists = { file("$projectDir/src/android").exists() }
+    ext.desktopExists = { file("$projectDir/src/desktop").exists() }
+    ext.iosExists = { file("$projectDir/src/ios").exists() }        
+    ext.jsExists = { file("$projectDir/src/js").exists() }    
+    ext.jvmExists = { file("$projectDir/src/jvm").exists() }
+    ext.isCrossplatform = { !androidExists() && !jsExists() && !iosExists() && !desktopExists() && !jvmExists() }       
+
+    ext.artifact = { String artifactId, Closure dependencies = null ->
+        if (artifactId.startsWith(":")) artifactId = artifactId.substring(1) // quickfix todo improve
+        if (artifactId.count(":") != 1) error("Invalid artifact id: $artifactId")
+        
+        project.ext.artifactGroup = artifactId.split(":")[0]
+        project.ext.artifactName = artifactId.split(":")[1]
+        project.ext.packageId = artifactId.replace(":", ".").replace("-", ".")
+        project.ext.packagePath = project.packageId.replaceAll("\\.", "/")
+
+        /*externals*/
+
+        if (artifactName.startsWith("android-")) {
+            project.android_external_library(true)
+        } else if (artifactName.startsWith("desktop-")) {
+            project.desktop_external_library()
+        } else if (artifactName.startsWith("ios-")) {
+            project.ios_external_library()
+        } else if (artifactName.startsWith("js-")) {
+            project.js_external_library()
+        } 
+
+        /*launchers: assemble, plugins, tools*/
+
+        else if (artifactName.endsWith("-android")) {
+            project.android_launcher()
+        } else if (artifactName.endsWith("-desktop")) {
+            project.desktop_launcher()
+        } else if (artifactName.endsWith("-ios")) {
+            project.ios_launcher()
+        } else if (artifactName.endsWith("-js")) {
+            project.js_launcher()
+        }
+
+        /*mpp: libs, targets*/
+
+        else {
+            project.common_library()
+
+            if (jvmExists()) project.jvm_library()
+            if (desktopExists() || isCrossplatform()) project.desktop_library()
+            if (androidExists() || isCrossplatform()) project.android_library()
+            if (iosExists() || isCrossplatform()) project.ios_library()
+            if (jsExists() || isCrossplatform()) project.js_library()  
+
+            if (dependencies != null) {
+                kotlin.sourceSets {
+                    dependencies.delegate = new MppDependenciesDelegate(project)
+                    dependencies()
+                }
+            } 
+        }
+    }
+
+}
+
+class MppDependenciesDelegate {    
+    
+    private final Project project;
+    private Object configureSourceSet;
+
+    MppDependenciesDelegate(Project project) {
+        this.project = project
+    }
+
+    void common(Closure configure) {        
+        configureSourceSet(configure, project.kotlin.sourceSets.commonMain)        
+    }
+
+    void android(Closure configure) {
+        configureSourceSet(configure, project.kotlin.sourceSets.androidMain)                
+    }
+
+    void desktop(Closure configure) {
+        configureSourceSet(configure, project.kotlin.sourceSets.desktopMain)                
+    }
+
+    void ios(Closure configure) {
+        configureSourceSet(configure, project.kotlin.sourceSets.iosMain)                
+    }
+
+    void js(Closure configure) {
+        configureSourceSet(configure, project.kotlin.sourceSets.jsMain)                
+    }
+
+    void jvm(Closure configure) {
+        configureSourceSet(configure, project.kotlin.sourceSets.jvmMain)                
+    }
+
+    void include(String dependency) {
+        Project rootProject = project.rootProject
+        boolean isLocalProject = dependency.startsWith(":") // quickfix todo improve
+        configureSourceSet.dependencies {
+            if (isLocalProject) api rootProject.project(dependency) else api dependency
+        }
+    }
+
+    String artifact(String string) {
+        return ":$string" // quickfix todo improve
+    }
+
+    private void configureSourceSet(Closure configure, Object sourceSet) {            
+        configureSourceSet = sourceSet
+        configure.delegate = this
+        configure()        
+        configureSourceSet = null
+    }
+
+}

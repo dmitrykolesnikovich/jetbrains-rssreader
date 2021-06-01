@@ -1,0 +1,61 @@
+// prefixes
+Properties prefixes = new Properties()
+if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+    new File(rootProject.projectDir, "gradle-macos.properties").withInputStream { prefixes.load(it) }
+} else {
+    new File(rootProject.projectDir, "gradle-windows.properties").withInputStream { prefixes.load(it) }
+}
+String enginePrefix = prefixes.getProperty("enginePrefix")
+String projectsPrefix = prefixes.getProperty("projectsPrefix")
+
+if (!new File(rootProject.projectDir, "build.gradle").exists()) {
+    rootProject.buildFileName = "${enginePrefix}gradle/featurea/package.gradle"
+}
+
+boolean isRootProjectEngine = rootProject.name == "engine"
+
+settings.ext.artifact = { String artifactId, Closure artifactPathClosure ->
+    String artifactPath = artifactPathClosure()
+    boolean isProjectArtifact = artifactPath.startsWith("projects/")
+
+    String artifactAbsolutePath
+    if (artifactPath.isEmpty()) {
+        artifactAbsolutePath = ""
+    } else if (isProjectArtifact) {
+        artifactAbsolutePath = "${projectsPrefix}${artifactPath}"
+    } else if (isRootProjectEngine) {
+        artifactAbsolutePath = artifactPath
+    } else {
+        artifactAbsolutePath = "${enginePrefix}${artifactPath}"
+    }
+
+    File artifactDir = new File(rootProject.projectDir, artifactAbsolutePath)
+    if (!artifactDir.exists()) throw new RuntimeException("Artifact not found: ${artifactDir.absolutePath}")
+
+    def includeProject = { File buildFile, String specifier = null ->
+        /*println("includeProject: ${buildFile.absolutePath}")*/
+        if (!buildFile.exists()) return
+
+        File projectDir = buildFile.parentFile
+        String projectPath = specifier != null ? ":$artifactId-$specifier" : ":$artifactId"
+        include(projectPath)
+        ProjectDescriptor project = project(projectPath)
+        project.projectDir = projectDir
+        project.buildFileName = buildFile.name
+    }
+
+    // build
+    includeProject(new File(artifactDir, "build.gradle"))
+    // test
+    includeProject(new File(artifactDir, "test.gradle"), "test")
+    // assemble
+    if (!artifactPath.contains("assemble")) {
+        String artifactName = new File(artifactPath).name
+        String assemblePath = "${artifactPath}/assemble/${artifactName}-desktop"
+        File assembleDir = new File(assemblePath)
+        /*println("assemblePath: $assemblePath, ${assembleDir.absolutePath} -> ${assembleDir.exists()}")*/
+        if (assembleDir.exists() || new File(rootProject.projectDir, assemblePath).exists()) {
+            artifact("${artifactId}-desktop") { assemblePath }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+buildscript {
+    // prefixes
+    ext {
+        Properties prefixes = new Properties()
+        if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+            new File(rootProject.projectDir, "gradle-macos.properties").withInputStream { prefixes.load(it) }
+        } else {
+            new File(rootProject.projectDir, "gradle-windows.properties").withInputStream { prefixes.load(it) }
+        }
+        enginePrefix = prefixes.getProperty("enginePrefix")
+    }
+
+    ext {
+        userHome = System.getProperty("user.home")
+        osName = System.getProperty("os.name").toLowerCase(Locale.ROOT)
+        isWindows = osName.contains("windows")
+        isMacOs = osName.contains("mac")
+        isLinux = osName.contains("linux")
+        useIosExternals = property("featurea.useIosExternals").toBoolean()
+        useJsExternals = property("featurea.useJsExternals").toBoolean()
+        error = { String message -> throw new IllegalArgumentException(message) }
+        includeScript = { String filePath -> apply(from: "${enginePrefix}${filePath}") }
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+        google()
+        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+        maven { url "https://jitpack.io" }
+        maven { url "https://dl.bintray.com/kotlin/ktor" }
+        maven { url "https://dl.bintray.com/lamba92/com.github.lamba92" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:3.6.4"
+        classpath "edu.sc.seis.gradle:launch4j:2.4.6"
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.2.0" // http://imperceptiblethoughts.com/shadow
+        classpath "org.jetbrains.kotlinx:atomicfu-gradle-plugin:$kotlin_atomicfu_version"
+        classpath "org.openjfx:javafx-plugin:0.0.10"
+        classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:5.0.0"
+    }
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+        google()
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+        maven { url "https://jitpack.io" }
+        maven { url "https://dl.bintray.com/kotlin/ktor" }
+        maven { url "https://dl.bintray.com/lamba92/com.github.lamba92" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+}
+
+includeScript "gradle/featurea/artifact.gradle"
+includeScript "gradle/featurea/assemble.gradle"
+includeScript "gradle/featurea/codegen.gradle"
+includeScript "gradle/featurea/externals.gradle"
+includeScript "gradle/featurea/launchers.gradle"
+includeScript "gradle/featurea/libs.gradle"
+includeScript "gradle/featurea/maven.gradle"
+includeScript "gradle/featurea/tools.gradle"
