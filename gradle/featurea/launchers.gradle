@@ -265,6 +265,9 @@ subprojects {
                         |}
                         |""".stripMargin("|")
                 }*/
+                generate {
+                    BootstrapKtFile().text = "// empty file for compiler"
+                }
             }
         }
     }

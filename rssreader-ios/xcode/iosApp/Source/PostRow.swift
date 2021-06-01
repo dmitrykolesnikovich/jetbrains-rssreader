@@ -1,5 +1,5 @@
 import SwiftUI
-import RssReader
+import rssreader
 import URLImage
 
 struct PostRow: View {

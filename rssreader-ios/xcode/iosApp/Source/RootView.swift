@@ -1,5 +1,5 @@
 import SwiftUI
-import RssReader
+import rssreader
 
 struct RootView: View {
     @EnvironmentObject var store: ObservableFeedStore

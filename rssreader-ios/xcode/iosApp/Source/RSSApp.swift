@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import RssReader
+import rssreader
 
 @main
 class RSSApp: App {

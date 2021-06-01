@@ -20,7 +20,9 @@ class RefreshWorker(appContext: Context, workerParams: WorkerParameters) :
     }
 
     companion object {
+
         private const val WORK_NAME = "refresh_work_name"
+
         fun enqueue(context: Context) {
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 WORK_NAME,
@@ -28,6 +30,7 @@ class RefreshWorker(appContext: Context, workerParams: WorkerParameters) :
                 PeriodicWorkRequestBuilder<RefreshWorker>(1, TimeUnit.HOURS).build()
             )
         }
+
     }
 
 }

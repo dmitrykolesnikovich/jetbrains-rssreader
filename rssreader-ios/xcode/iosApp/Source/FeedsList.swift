@@ -1,5 +1,5 @@
 import SwiftUI
-import RssReader
+import rssreader
 
 struct FeedsList: ConnectedView {
     
