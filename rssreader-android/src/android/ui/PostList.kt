@@ -1,4 +1,4 @@
-package com.github.jetbrains.rssreader.androidApp.ui.compose
+package rssreader.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,9 +16,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import Post
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.statusBarsHeight
+import rssreader.Post
 import java.text.SimpleDateFormat
 import java.util.*
 

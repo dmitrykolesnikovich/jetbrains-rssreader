@@ -1,15 +1,16 @@
-package com.github.jetbrains.rssreader.androidApp
+package rssreader
 
 import android.content.Intent
 import android.net.Uri
-import com.github.jetbrains.rssreader.androidApp.ui.fragment.FeedListFragment
-import com.github.jetbrains.rssreader.androidApp.ui.fragment.MainFeedFragment
+import rssreader.fragment.FeedListFragment
+import rssreader.fragment.MainFeedFragment
 import com.github.terrakok.modo.android.AppScreen
 import com.github.terrakok.modo.android.ExternalScreen
 import kotlinx.parcelize.Parcelize
 
 @Suppress("FunctionName")
 object Screens {
+
     @Parcelize
     class MainFeed : AppScreen("MainFeed") {
         override fun create() = MainFeedFragment()
@@ -21,4 +22,5 @@ object Screens {
     }
 
     fun Browser(url: String) = ExternalScreen { Intent(Intent.ACTION_VIEW, Uri.parse(url)) }
+
 }

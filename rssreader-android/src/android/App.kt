@@ -1,12 +1,10 @@
-package com.github.jetbrains.rssreader.androidApp
+package rssreader
 
 import android.app.Application
-import com.github.jetbrains.rssreader.androidApp.sync.RefreshWorker
-import FeedStore
-import RssReader
-import com.github.jetbrains.rssreader.core.create
+import rssreader.sync.RefreshWorker
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.AppReducer
+import jetbrains.rssreader.BuildConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -45,4 +43,5 @@ class App : Application() {
         internal lateinit var INSTANCE: App
             private set
     }
+
 }

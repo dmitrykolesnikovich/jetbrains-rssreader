@@ -1,6 +1,6 @@
+package rssreader
+
 import com.github.aakira.napier.Napier
-import RssReader
-import Feed
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -1,12 +1,12 @@
-package com.github.jetbrains.rssreader.androidApp.sync
+package rssreader.sync
 
 import android.content.Context
 import androidx.work.*
-import RssReader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import rssreader.RssReader
 import java.util.concurrent.TimeUnit
 
 class RefreshWorker(

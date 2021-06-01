@@ -1,4 +1,4 @@
-package com.github.jetbrains.rssreader.core
+package rssreader
 
 import android.content.Context
 import com.github.aakira.napier.DebugAntilog

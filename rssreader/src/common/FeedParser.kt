@@ -1,4 +1,5 @@
-import Feed
+package rssreader
+
 import io.ktor.http.*
 
 interface FeedParser {

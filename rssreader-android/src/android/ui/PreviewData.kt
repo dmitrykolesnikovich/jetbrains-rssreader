@@ -1,7 +1,7 @@
-package com.github.jetbrains.rssreader.androidApp.ui.compose
+package rssreader.ui
 
-import Feed
-import Post
+import rssreader.Feed
+import rssreader.Post
 
 object PreviewData {
     val post = Post(

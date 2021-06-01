@@ -1,9 +1,6 @@
-package com.github.jetbrains.rssreader.core
+package rssreader
 
 import com.github.aakira.napier.Napier
-import FeedParser
-import Feed
-import Post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import platform.Foundation.*

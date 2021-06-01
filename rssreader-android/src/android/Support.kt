@@ -1,4 +1,4 @@
-package com.github.jetbrains.rssreader.androidApp.ui.util
+package rssreader
 
 import android.graphics.Rect
 import android.view.View

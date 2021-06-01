@@ -1,4 +1,4 @@
-package com.github.jetbrains.rssreader.androidApp.ui.compose
+package rssreader.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import com.github.jetbrains.rssreader.androidApp.R
-import FeedAction
-import FeedStore
-import Feed
+import rssreader.R
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
+import rssreader.Feed
+import rssreader.FeedAction
+import rssreader.FeedStore
 
 @Composable
 fun FeedListScreen(

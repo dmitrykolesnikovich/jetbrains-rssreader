@@ -1,4 +1,4 @@
-package com.github.jetbrains.rssreader.androidApp
+package rssreader
 
 import android.graphics.Color
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
 import androidx.core.view.WindowInsetsCompat
-import com.github.jetbrains.rssreader.androidApp.ui.fragment.BaseFragment
-import com.github.jetbrains.rssreader.androidApp.ui.util.doOnApplyWindowInsets
+import rssreader.fragment.BaseFragment
+import rssreader.ui.util.doOnApplyWindowInsets
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.ModoRender
 import com.github.terrakok.modo.android.init

@@ -1,4 +1,5 @@
-import Feed
+package rssreader
+
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import kotlinx.serialization.builtins.ListSerializer
