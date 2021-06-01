@@ -22,6 +22,7 @@ buildscript {
         includeScript = { String filePath -> apply(from: "${enginePrefix}${filePath}") }
     }
     repositories {
+        // gradlePluginPortal()
         mavenCentral()
         jcenter()
         maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
@@ -40,11 +41,16 @@ buildscript {
         classpath "org.jetbrains.kotlinx:atomicfu-gradle-plugin:$kotlin_atomicfu_version"
         classpath "org.openjfx:javafx-plugin:0.0.10"
         classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:5.0.0"
+
+        // 
+        classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
+        classpath("com.android.tools.build:gradle:7.1.0-alpha01")
     }
 }
 
 subprojects {
     repositories {
+        gradlePluginPortal()
         mavenCentral()
         jcenter()
         google()

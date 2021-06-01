@@ -1,3 +1,20 @@
 artifact("jetbrains:rssreader") {
-    
+    common {
+        include "io.ktor:ktor-client-core:$ktor_version"
+        include "io.ktor:ktor-client-logging:$ktor_version"
+        include "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
+        include "com.github.aakira:napier:1.4.1"
+        include "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
+        include "com.russhwolf:multiplatform-settings:0.7.4"
+    }
+    android {
+        include "io.ktor:ktor-client-okhttp:$ktor_version"
+    }
+    ios {
+        include "io.ktor:ktor-client-ios:$ktor_version"
+    }
+}
+
+plugins {
+    kotlin("plugin.serialization")
 }
