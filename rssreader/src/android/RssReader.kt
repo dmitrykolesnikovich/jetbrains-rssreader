@@ -10,10 +10,7 @@ import kotlinx.serialization.json.Json
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun RssReader.Companion.create(ctx: Context, withLog: Boolean) = RssReader(
-    FeedLoader(
-        AndroidHttpClient(withLog),
-        AndroidFeedParser()
-    ),
+    FeedLoader(AndroidHttpClient(withLog), AndroidFeedParser()),
     FeedStorage(
         AndroidSettings(ctx.getSharedPreferences("rss_reader_pref", Context.MODE_PRIVATE)),
         Json {

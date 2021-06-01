@@ -37,7 +37,7 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.android.tools.build:gradle:3.6.4"
+        // classpath "com.android.tools.build:gradle:3.6.4"
         classpath "edu.sc.seis.gradle:launch4j:2.4.6"
         classpath "com.github.jengelman.gradle.plugins:shadow:5.2.0" // http://imperceptiblethoughts.com/shadow
         classpath "org.jetbrains.kotlinx:atomicfu-gradle-plugin:$kotlin_atomicfu_version"
@@ -46,7 +46,7 @@ buildscript {
 
         // rssreader
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
-        // classpath("com.android.tools.build:gradle:7.1.0-alpha01")
+        classpath("com.android.tools.build:gradle:7.1.0-alpha01")
     }
 }
 

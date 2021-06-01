@@ -16,3 +16,16 @@ artifact("jetbrains:rssreader") {
 }
 
 apply plugin: "kotlinx-serialization"
+
+// >> https://youtrack.jetbrains.com/issue/KT-43944#focus=Comments-27-4610976.0-0
+android {
+    configurations {
+        androidTestApi {}
+        androidTestDebugApi {}
+        androidTestReleaseApi {}
+        testApi {}
+        testDebugApi {}
+        testReleaseApi {}
+    }
+}
+// <<

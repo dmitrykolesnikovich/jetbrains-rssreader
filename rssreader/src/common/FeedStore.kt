@@ -28,7 +28,6 @@ sealed class FeedSideEffect : Effect {
     data class Error(val error: Exception) : FeedSideEffect()
 }
 
-@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class FeedStore(
     private val rssReader: RssReader
 ) : Store<FeedState, FeedAction, FeedSideEffect>,

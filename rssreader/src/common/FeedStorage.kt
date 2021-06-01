@@ -16,8 +16,9 @@ class FeedStorage(
     private var diskCache: Map<String, Feed>
         get() {
             return settings.getStringOrNull(KEY_FEED_CACHE)?.let { str ->
-                json.decodeFromString(ListSerializer(Feed.serializer()), str)
-                    .associate { it.sourceUrl to it }
+                val feedSerializer = Feed.serializer()
+                val listSerializer = ListSerializer(feedSerializer)
+                json.decodeFromString(listSerializer, str).associate { it.sourceUrl to it }
             } ?: mutableMapOf()
         }
         set(value) {
