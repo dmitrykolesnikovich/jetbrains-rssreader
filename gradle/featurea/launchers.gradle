@@ -117,7 +117,8 @@ subprojects {
 
             application {
                 mainClassName = project.desktopLauncherMainClassName
-                applicationName = project.name.replaceFirst("-utils", "") // quickfix todo find better place
+                applicationName = project.name.replaceFirst("-utils", "")
+                // quickfix todo find better place
             }
 
             run {
@@ -184,6 +185,7 @@ subprojects {
             }
 
             ext.assemble = { Project mainProject ->
+                println("assemble ios: ${mainProject.name}")
                 project.ext.frameworkBaseName = mainProject.name.replace("-", "_")
                 kotlin {
                     if (project != mainProject) {
@@ -193,6 +195,7 @@ subprojects {
                             }
                         }
                     }
+                    println("useIosExternals: $useIosExternals")
                     if (useIosExternals) {
                         targets {
                             fromPreset(presets.iosArm64, "ios") {
