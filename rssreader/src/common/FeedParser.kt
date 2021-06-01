@@ -1,6 +1,4 @@
-package com.github.jetbrains.rssreader.core.datasource.network
-
-import com.github.jetbrains.rssreader.core.entity.Feed
+import Feed
 import io.ktor.http.*
 
 interface FeedParser {

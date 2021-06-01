@@ -1,6 +1,4 @@
-package com.github.jetbrains.rssreader.core.datasource.storage
-
-import com.github.jetbrains.rssreader.core.entity.Feed
+import Feed
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import kotlinx.serialization.builtins.ListSerializer

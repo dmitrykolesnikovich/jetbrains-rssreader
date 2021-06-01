@@ -17,7 +17,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.github.jetbrains.rssreader.androidApp.R
-import com.github.jetbrains.rssreader.core.entity.Feed
+import Feed
 
 @Composable
 fun AddFeedDialog(

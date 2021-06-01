@@ -1,8 +1,6 @@
-package com.github.jetbrains.rssreader.app
-
 import com.github.aakira.napier.Napier
-import com.github.jetbrains.rssreader.core.RssReader
-import com.github.jetbrains.rssreader.core.entity.Feed
+import RssReader
+import Feed
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

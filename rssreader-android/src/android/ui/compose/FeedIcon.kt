@@ -23,7 +23,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.jetbrains.rssreader.androidApp.R
-import com.github.jetbrains.rssreader.core.entity.Feed
+import Feed
 import com.google.accompanist.coil.rememberCoilPainter
 import java.util.*
 

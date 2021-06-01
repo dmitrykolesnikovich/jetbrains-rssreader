@@ -8,6 +8,7 @@ subprojects {
     ext.isCrossplatform = { !androidExists() && !jsExists() && !iosExists() && !desktopExists() && !jvmExists() }       
 
     ext.artifact = { String artifactId, Closure dependencies = null ->
+        println("artifact: $artifactId")
         if (artifactId.startsWith(":")) artifactId = artifactId.substring(1) // quickfix todo improve
         if (artifactId.count(":") != 1) error("Invalid artifact id: $artifactId")
         
@@ -31,6 +32,7 @@ subprojects {
         /*launchers: assemble, plugins, tools*/
 
         else if (artifactName.endsWith("-android")) {
+            println("android_launcher: $artifactName")
             project.android_launcher()
         } else if (artifactName.endsWith("-desktop")) {
             project.desktop_launcher()

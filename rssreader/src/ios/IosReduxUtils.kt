@@ -1,5 +1,4 @@
-package com.github.jetbrains.rssreader.app
-
+import FeedStore
 import com.github.jetbrains.rssreader.core.wrap
 
 fun FeedStore.watchState() = observeState().wrap()

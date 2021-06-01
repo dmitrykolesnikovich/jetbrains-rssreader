@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.jetbrains.rssreader.core.entity.Feed
+import Feed
 
 private sealed class Icons {
     object All : Icons()
