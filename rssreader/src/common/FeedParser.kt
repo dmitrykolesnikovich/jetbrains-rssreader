@@ -3,6 +3,7 @@ package rssreader
 import io.ktor.http.*
 
 interface FeedParser {
+
     suspend fun parse(sourceUrl: String, xml: String, isDefault: Boolean): Feed
 
     companion object {
@@ -21,17 +22,12 @@ interface FeedParser {
                 }
             }
 
-        internal fun cleanText(text: String?): String? =
-            text?.replace(htmlTag, "")
-                ?.replace(blankLine, "")
-                ?.trim()
+        internal fun cleanText(text: String?): String? = text?.replace(htmlTag, "")?.replace(blankLine, "")?.trim()
 
         internal fun cleanTextCompact(text: String?) = cleanText(text)?.take(300)
 
         internal fun pullPostImageUrl(postLink: String?, description: String?, content: String?): String? =
-            postLink?.let { l ->
-                description?.let { findImageUrl(l, it) }
-                    ?: content?.let { findImageUrl(l, it) }
-            }
+            postLink?.let { l -> description?.let { findImageUrl(l, it) } ?: content?.let { findImageUrl(l, it) } }
+
     }
 }

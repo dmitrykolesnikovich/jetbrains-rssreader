@@ -1,4 +1,4 @@
-package rssreader.fragment
+package rssreader.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import rssreader.ui.FeedListScreen
-import FeedSideEffect
-import FeedStore
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.back
 import kotlinx.coroutines.CoroutineScope
@@ -15,8 +13,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import org.koin.android.ext.android.inject
+import rssreader.FeedSideEffect
+import rssreader.FeedStore
 
 class FeedListFragment : BaseFragment(), CoroutineScope by CoroutineScope(Dispatchers.Main) {
+
     private val store: FeedStore by inject()
     private val modo: Modo by inject()
     private var effectJob: Job? = null

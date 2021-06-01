@@ -7,11 +7,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-data class FeedState(
-    val progress: Boolean,
-    val feeds: List<Feed>,
-    val selectedFeed: Feed? = null //null means selected all
-) : State
+data class FeedState(val progress: Boolean, val feeds: List<Feed>, val selectedFeed: Feed? = null) : State
 
 fun FeedState.mainFeedPosts() = (selectedFeed?.posts ?: feeds.flatMap { it.posts }).sortedByDescending { it.date }
 
@@ -28,9 +24,7 @@ sealed class FeedSideEffect : Effect {
     data class Error(val error: Exception) : FeedSideEffect()
 }
 
-class FeedStore(
-    private val rssReader: RssReader
-) : Store<FeedState, FeedAction, FeedSideEffect>,
+class FeedStore(private val rssReader: RssReader) : Store<FeedState, FeedAction, FeedSideEffect>,
     CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     private val state = MutableStateFlow(FeedState(false, emptyList()))
@@ -136,4 +130,5 @@ class FeedStore(
             dispatch(FeedAction.Error(e))
         }
     }
+
 }

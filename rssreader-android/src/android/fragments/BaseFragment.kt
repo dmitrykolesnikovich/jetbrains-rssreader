@@ -1,10 +1,11 @@
-package rssreader.fragment
+package rssreader.fragments
 
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 
 open class BaseFragment : Fragment {
+
     constructor() : super()
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
@@ -79,4 +80,5 @@ open class BaseFragment : Fragment {
         private const val APP_RUN_ID = "state_app_run_id"
         private const val FIRST_RUN_ID = "state_first_run_id"
     }
+
 }

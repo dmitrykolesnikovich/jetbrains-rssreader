@@ -1,20 +1,24 @@
 package rssreader
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
 import androidx.core.view.WindowInsetsCompat
 import rssreader.fragment.BaseFragment
-import rssreader.ui.util.doOnApplyWindowInsets
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.ModoRender
 import com.github.terrakok.modo.android.init
 import com.github.terrakok.modo.back
+import jetbrains.rssreader.R
 import org.koin.android.ext.android.inject
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class AppActivity : AppCompatActivity(R.layout.container) {
+    
     private val modoRender by lazy { ModoRender(this, R.id.container) }
     private val modo: Modo by inject()
 
@@ -24,6 +28,7 @@ class AppActivity : AppCompatActivity(R.layout.container) {
         modo.init(savedInstanceState, Screens.MainFeed())
         handleLeftAndRightInsets()
     }
+
 
     private fun colorSystemBars() {
         val color = Color.argb(200, 0, 0, 0)

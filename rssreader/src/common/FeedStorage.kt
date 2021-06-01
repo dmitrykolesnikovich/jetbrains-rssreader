@@ -5,13 +5,9 @@ import com.russhwolf.settings.set
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 
-class FeedStorage(
-    private val settings: Settings,
-    private val json: Json
-) {
-    private companion object {
-        private const val KEY_FEED_CACHE = "key_feed_cache"
-    }
+private const val KEY_FEED_CACHE = "key_feed_cache"
+
+class FeedStorage(private val settings: Settings, private val json: Json) {
 
     private var diskCache: Map<String, Feed>
         get() {
@@ -23,8 +19,7 @@ class FeedStorage(
         }
         set(value) {
             val list = value.map { it.value }
-            settings[KEY_FEED_CACHE] =
-                json.encodeToString(ListSerializer(Feed.serializer()), list)
+            settings[KEY_FEED_CACHE] = json.encodeToString(ListSerializer(Feed.serializer()), list)
         }
 
     private val memCache: MutableMap<String, Feed> by lazy { diskCache.toMutableMap() }
@@ -42,4 +37,5 @@ class FeedStorage(
     }
 
     suspend fun getAllFeeds(): List<Feed> = memCache.values.toList()
+
 }

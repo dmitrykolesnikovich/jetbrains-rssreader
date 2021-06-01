@@ -9,6 +9,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 internal class IosFeedParser : FeedParser {
+
     override suspend fun parse(sourceUrl: String, xml: String, isDefault: Boolean): Feed =
         withContext(Dispatchers.Default) {
             suspendCoroutine { continuation ->
@@ -56,12 +57,7 @@ internal class IosFeedParser : FeedParser {
             currentData[currentElement] = (currentData[currentElement] ?: "") + foundCharacters
         }
 
-        override fun parser(
-            parser: NSXMLParser,
-            didEndElement: String,
-            namespaceURI: String?,
-            qualifiedName: String?
-        ) {
+        override fun parser(parser: NSXMLParser, didEndElement: String, namespaceURI: String?, qualifiedName: String?) {
             if (didEndElement == "item") {
                 posts.add(Post.withMap(currentItemData))
                 currentItemData.clear()
@@ -75,11 +71,7 @@ internal class IosFeedParser : FeedParser {
 
         private fun Post.Companion.withMap(rssMap: Map<String, String>): Post {
             val pubDate = rssMap["pubDate"]
-            val date =
-                if (pubDate != null)
-                    dateFormatter.dateFromString(pubDate.trim())?.timeIntervalSince1970
-                else
-                    null
+            val date = if (pubDate != null) dateFormatter.dateFromString(pubDate.trim())?.timeIntervalSince1970 else null
             val link = rssMap["link"]
             val description = rssMap["description"]
             val content = rssMap["content:encoded"]
@@ -107,8 +99,5 @@ internal class IosFeedParser : FeedParser {
             isDefault
         )
     }
+
 }
-
-
-
-

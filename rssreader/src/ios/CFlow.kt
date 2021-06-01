@@ -24,4 +24,3 @@ class CFlow<T: Any> internal constructor(private val origin: Flow<T>) : Flow<T> 
 }
 
 internal fun <T: Any> Flow<T>.wrap(): CFlow<T> = CFlow(this)
-

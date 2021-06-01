@@ -19,14 +19,4 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.5.0")
 }
 
-/*apply plugin: "kotlinx-parcelize"*/
-
-android {
-    /*buildFeatures {
-        viewBinding = true
-        // compose = true
-    }*/
-    /*composeOptions {
-        kotlinCompilerExtensionVersion = $compose_version
-    }*/
-}
+apply plugin: "kotlin-parcelize"

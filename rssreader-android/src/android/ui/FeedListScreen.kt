@@ -20,9 +20,7 @@ import rssreader.FeedAction
 import rssreader.FeedStore
 
 @Composable
-fun FeedListScreen(
-    store: FeedStore
-) {
+fun FeedListScreen(store: FeedStore) {
     AppTheme {
         ProvideWindowInsets {
             Box {

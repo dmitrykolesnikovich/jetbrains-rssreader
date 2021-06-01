@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -17,12 +18,11 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
+import rssreader.FeedAction
+import rssreader.FeedStore
 
 @Composable
-fun MainScreen(
-    store: FeedStore,
-    modo: Modo
-) {
+fun MainScreen(store: FeedStore, modo: Modo) {
     AppTheme {
         ProvideWindowInsets {
             val state = store.observeState().collectAsState()
@@ -54,9 +54,7 @@ fun MainScreen(
                         onEditClick = { modo.forward(Screens.FeedList()) }
                     )
                     Spacer(
-                        Modifier
-                            .navigationBarsHeight()
-                            .fillMaxWidth()
+                        Modifier.navigationBarsHeight().fillMaxWidth()
                     )
                 }
             }

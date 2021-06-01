@@ -13,6 +13,7 @@ class RefreshWorker(
     appContext: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(appContext, workerParams), KoinComponent {
+
     private val rssReader: RssReader by inject()
 
     override suspend fun doWork(): Result = withContext(Dispatchers.Main) {
@@ -30,4 +31,5 @@ class RefreshWorker(
             )
         }
     }
+
 }

@@ -1,6 +1,8 @@
 package rssreader
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import rssreader.sync.RefreshWorker
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.AppReducer
@@ -11,6 +13,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import org.koin.dsl.module
 
+@RequiresApi(Build.VERSION_CODES.O)
 class App : Application() {
 
     override fun onCreate() {
@@ -19,6 +22,7 @@ class App : Application() {
         initKoin()
         launchBackgroundSync()
     }
+
 
     private val appModule = module {
         single { RssReader.create(get(), BuildConfig.DEBUG) }

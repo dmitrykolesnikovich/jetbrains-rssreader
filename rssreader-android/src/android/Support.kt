@@ -7,9 +7,7 @@ import androidx.core.view.WindowInsetsCompat
 
 fun View.doOnApplyWindowInsets(block: (View, insets: WindowInsetsCompat, initialPadding: Rect) -> WindowInsetsCompat) {
     val initialPadding = recordInitialPaddingForView(this)
-    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-        block(v, insets, initialPadding)
-    }
+    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets -> block(v, insets, initialPadding) }
     requestApplyInsetsWhenAttached()
 }
 

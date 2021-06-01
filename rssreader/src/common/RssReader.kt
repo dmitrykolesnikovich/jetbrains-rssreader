@@ -9,10 +9,7 @@ class RssReader internal constructor(
     private val feedStorage: FeedStorage,
     private val settings: Settings = Settings(setOf("https://blog.jetbrains.com/kotlin/feed/"))
 ) {
-    @Throws(Exception::class)
-    suspend fun getAllFeeds(
-        forceUpdate: Boolean = false
-    ): List<Feed> {
+    suspend fun getAllFeeds(forceUpdate: Boolean = false): List<Feed> {
         var feeds = feedStorage.getAllFeeds()
 
         if (forceUpdate || feeds.isEmpty()) {
@@ -27,13 +24,11 @@ class RssReader internal constructor(
         return feeds
     }
 
-    @Throws(Exception::class)
     suspend fun addFeed(url: String) {
         val feed = feedLoader.getFeed(url, settings.isDefault(url))
         feedStorage.saveFeed(feed)
     }
 
-    @Throws(Exception::class)
     suspend fun deleteFeed(url: String) {
         feedStorage.deleteFeed(url)
     }
@@ -42,4 +37,5 @@ class RssReader internal constructor(
         coroutineScope { map { async { f(it) } }.awaitAll() }
 
     companion object
+
 }

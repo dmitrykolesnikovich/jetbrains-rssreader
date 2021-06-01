@@ -17,22 +17,16 @@ internal class AndroidFeedParser : FeedParser {
     private val dateFormat = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US)
 
     override suspend fun parse(sourceUrl: String, xml: String, isDefault: Boolean): Feed = withContext(Dispatchers.IO) {
-        val parser = Xml.newPullParser().apply {
-            setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
-        }
-
+        val parser = Xml.newPullParser().apply { setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false) }
         var feed: Feed
-
         xml.reader().use { reader ->
             parser.setInput(reader)
-
             var tag = parser.nextTag()
             while (tag != XmlPullParser.START_TAG && parser.name != "rss") {
                 skip(parser)
                 tag = parser.next()
             }
             parser.nextTag()
-
             feed = readFeed(sourceUrl, parser, isDefault)
         }
 
