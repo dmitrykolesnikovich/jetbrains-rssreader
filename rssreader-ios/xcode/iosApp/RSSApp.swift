@@ -1,11 +1,3 @@
-//
-//  App.swift
-//  iosApp
-//
-//  Created by Ekaterina.Petrova on 13.11.2020.
-//  Copyright © 2020 orgName. All rights reserved.
-//
-
 import Foundation
 import SwiftUI
 import RssReader
@@ -85,4 +77,3 @@ public struct StoreConnector<V: View>: View {
         return content(store.state, store.dispatch)
     }
 }
-

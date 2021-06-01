@@ -1,11 +1,3 @@
-//
-//  RssRow.swift
-//  iosApp
-//
-//  Created by Ekaterina.Petrova on 25.10.2020.
-//  Copyright © 2020 orgName. All rights reserved.
-//
-
 import SwiftUI
 import RssReader
 import URLImage
@@ -61,4 +53,3 @@ extension Post {
         }
     }
 }
-

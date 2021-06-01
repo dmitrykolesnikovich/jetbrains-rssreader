@@ -1,9 +1,3 @@
-//
-//  ContentView.swift
-//
-//  Created by Chris Eidhof on 20.04.20.
-//  Copyright © 2020 objc.io. All rights reserved.
-//
 import SwiftUI
 import UIKit
 
@@ -20,8 +14,6 @@ extension UIAlertController {
         })
     }
 }
-
-
 
 struct AlertWrapper<Content: View>: UIViewControllerRepresentable {
     @Binding var isPresented: Bool

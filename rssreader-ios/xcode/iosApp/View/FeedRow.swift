@@ -1,11 +1,3 @@
-//
-//  FeedRow.swift
-//  iosApp
-//
-//  Created by Ekaterina.Petrova on 11.11.2020.
-//  Copyright © 2020 orgName. All rights reserved.
-//
-
 import SwiftUI
 import RssReader
 import URLImage
@@ -37,6 +29,3 @@ struct FeedRow: View {
         }
     }
 }
-
-
-

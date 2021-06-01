@@ -1,11 +1,3 @@
-//
-//  FeedsList.swift
-//  iosApp
-//
-//  Created by Ekaterina.Petrova on 11.11.2020.
-//  Copyright © 2020 orgName. All rights reserved.
-//
-
 import SwiftUI
 import RssReader
 
@@ -54,4 +46,3 @@ struct FeedsList: ConnectedView {
 }
 
 extension Feed: Identifiable { }
-
