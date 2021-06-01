@@ -1,12 +1,14 @@
 // prefixes
 Properties prefixes = new Properties()
 if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-    new File(rootProject.projectDir, "gradle-macos.properties").withInputStream { prefixes.load(it) }
+    File file = new File(rootProject.projectDir, "gradle-macos.properties")
+    if (file.exists()) file.withInputStream { prefixes.load(it) }
 } else {
-    new File(rootProject.projectDir, "gradle-windows.properties").withInputStream { prefixes.load(it) }
+    File file = new File(rootProject.projectDir, "gradle-windows.properties")
+    if (file.exists()) file.withInputStream { prefixes.load(it) }
 }
-String enginePrefix = prefixes.getProperty("enginePrefix")
-String projectsPrefix = prefixes.getProperty("projectsPrefix")
+String enginePrefix = prefixes.getProperty("enginePrefix") ?: ""
+String projectsPrefix = prefixes.getProperty("projectsPrefix") ?: ""
 
 if (!new File(rootProject.projectDir, "build.gradle").exists()) {
     rootProject.buildFileName = "${enginePrefix}gradle/featurea/package.gradle"

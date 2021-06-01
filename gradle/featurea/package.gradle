@@ -3,11 +3,13 @@ buildscript {
     ext {
         Properties prefixes = new Properties()
         if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-            new File(rootProject.projectDir, "gradle-macos.properties").withInputStream { prefixes.load(it) }
+            File file = new File(rootProject.projectDir, "gradle-macos.properties")
+            if (file.exists()) file.withInputStream { prefixes.load(it) }
         } else {
-            new File(rootProject.projectDir, "gradle-windows.properties").withInputStream { prefixes.load(it) }
+            File file = new File(rootProject.projectDir, "gradle-windows.properties")
+            if (file.exists()) file.withInputStream { prefixes.load(it) }
         }
-        enginePrefix = prefixes.getProperty("enginePrefix")
+        enginePrefix = prefixes.getProperty("enginePrefix") ?: ""
     }
 
     ext {
@@ -42,9 +44,9 @@ buildscript {
         classpath "org.openjfx:javafx-plugin:0.0.10"
         classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:5.0.0"
 
-        // 
+        // rssreader
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
-        classpath("com.android.tools.build:gradle:7.1.0-alpha01")
+        // classpath("com.android.tools.build:gradle:7.1.0-alpha01")
     }
 }
 
