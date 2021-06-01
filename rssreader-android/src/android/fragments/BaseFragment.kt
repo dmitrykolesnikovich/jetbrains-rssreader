@@ -3,6 +3,8 @@ package rssreader.fragments
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 open class BaseFragment : Fragment {
 

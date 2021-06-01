@@ -9,10 +9,8 @@ import org.koin.core.component.inject
 import rssreader.RssReader
 import java.util.concurrent.TimeUnit
 
-class RefreshWorker(
-    appContext: Context,
-    workerParams: WorkerParameters
-) : CoroutineWorker(appContext, workerParams), KoinComponent {
+class RefreshWorker(appContext: Context, workerParams: WorkerParameters) :
+    CoroutineWorker(appContext, workerParams), KoinComponent {
 
     private val rssReader: RssReader by inject()
 

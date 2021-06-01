@@ -20,3 +20,17 @@ dependencies {
 }
 
 apply plugin: "kotlin-parcelize"
+
+android {
+    buildFeatures {
+        viewBinding = true
+        compose = true
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+        useIR = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = compose_version
+    }
+}

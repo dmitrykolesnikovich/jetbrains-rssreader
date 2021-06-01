@@ -16,6 +16,8 @@ import org.koin.android.ext.android.inject
 import rssreader.FeedAction
 import rssreader.FeedSideEffect
 import rssreader.FeedStore
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class MainFeedFragment : BaseFragment(), CoroutineScope by CoroutineScope(Dispatchers.Main) {
 

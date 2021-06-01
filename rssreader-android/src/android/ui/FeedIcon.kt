@@ -22,8 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import rssreader.R
+import jetbrains.rssreader.android.R
 import com.google.accompanist.coil.rememberCoilPainter
+import rssreader.Feed
 import java.util.*
 
 @Composable

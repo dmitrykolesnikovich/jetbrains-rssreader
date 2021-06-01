@@ -17,7 +17,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import rssreader.Feed
-import rssreader.R
+import jetbrains.rssreader.android.R
 
 @Composable
 fun AddFeedDialog(onAdd: (String) -> Unit, onDismiss: () -> Unit) = Dialog(onDismissRequest = onDismiss) {

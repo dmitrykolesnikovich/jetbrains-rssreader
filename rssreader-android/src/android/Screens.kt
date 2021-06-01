@@ -2,8 +2,8 @@ package rssreader
 
 import android.content.Intent
 import android.net.Uri
-import rssreader.fragment.FeedListFragment
-import rssreader.fragment.MainFeedFragment
+import rssreader.fragments.FeedListFragment
+import rssreader.fragments.MainFeedFragment
 import com.github.terrakok.modo.android.AppScreen
 import com.github.terrakok.modo.android.ExternalScreen
 import kotlinx.parcelize.Parcelize

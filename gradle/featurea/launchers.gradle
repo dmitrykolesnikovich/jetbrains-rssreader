@@ -25,7 +25,7 @@ subprojects {
                 buildToolsVersion "29.0.3"
                 defaultConfig {
                     applicationId project.packageId.replace(".android", "")
-                    minSdkVersion 19
+                    minSdkVersion 21
                     targetSdkVersion 28
                     versionCode 1
                     versionName "1.0"
@@ -60,7 +60,7 @@ subprojects {
             }
 
             ext.onLaunch = { String mainCall ->
-                generate {
+                /*generate {
                     BootstrapKtFile().text = """\
                         |package ${project.packageId}
                         |
@@ -89,7 +89,7 @@ subprojects {
                         |
                         |}
                         |""".stripMargin("|")
-                }
+                }*/
             }
         }
     }
@@ -214,13 +214,11 @@ subprojects {
             }
 
             ext.onLaunch = { String mainCall ->
-                generate {
+                /*generate {
                     BootstrapKtFile().text = """\
-                        |/*
-                        |import UIKit
-                        |import $frameworkBaseName
-                        |UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv, nil, BootstrapKt.delegateClassName)
-                        |*/
+                        |// import UIKit
+                        |// import $frameworkBaseName
+                        |// UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv, nil, BootstrapKt.delegateClassName)
                         |
                         |import featurea.ios.MainApplicationDelegateProxy
                         |import featurea.ios.FeatureaApplicationService
@@ -263,7 +261,7 @@ subprojects {
                         |
                         |}
                         |""".stripMargin("|")
-                }
+                }*/
             }
         }
     }
