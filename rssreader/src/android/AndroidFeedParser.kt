@@ -1,10 +1,9 @@
 package rssreader
 
+import android.os.Build
 import android.util.Xml
+import androidx.annotation.RequiresApi
 import com.github.aakira.napier.Napier
-import FeedParser
-import Feed
-import Post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParser
@@ -12,7 +11,9 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 internal class AndroidFeedParser : FeedParser {
+
     private val dateFormat = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US)
 
     override suspend fun parse(sourceUrl: String, xml: String, isDefault: Boolean): Feed = withContext(Dispatchers.IO) {
